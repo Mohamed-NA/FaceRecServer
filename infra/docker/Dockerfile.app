@@ -10,6 +10,7 @@ WORKDIR /app
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         curl \
+        git \
         cmake \
         build-essential \
         libopenblas-dev \
