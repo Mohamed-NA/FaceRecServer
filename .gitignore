@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+dist/
+
+# Project data & model (large / sensitive)
+data/faces.db
+model/face_embeddings.json
+
+# Generated docs
+doc/*.pdf
+
+# Internal planning
+PLAN.md
+
+# OS
+.DS_Store

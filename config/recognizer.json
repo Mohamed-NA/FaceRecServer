@@ -1,0 +1,4 @@
+{
+  "distance_threshold": 0.5,
+  "detection_model": "hog"
+}

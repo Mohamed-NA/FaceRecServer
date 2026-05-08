@@ -1,0 +1,78 @@
+name: Publish
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── 1. Test ────────────────────────────────────────────────────────────────
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential libopenblas-dev liblapack-dev libgl1 libglib2.0-0
+          uv sync
+
+      - name: Smoke import
+        run: uv run python -c "from facerecserver.inference import FaceRecognizer; print('OK')"
+
+      - name: Build app image (compile check)
+        run: docker build -f infra/docker/Dockerfile.app -t facerecserver-app:ci .
+
+  # ── 2. Push app image ──────────────────────────────────────────────────────
+  build-and-push-app:
+    needs: test
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: infra/docker/Dockerfile.app
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/facerecserver-app:latest
+
+  # ── 3. Push models image (tags only) ──────────────────────────────────────
+  build-and-push-models:
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download model bundle from GitHub Release
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          gh release download "$TAG" --pattern "model-bundle.tar.gz" --dir dist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: infra/docker/Dockerfile.models
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/facerecserver-models:latest

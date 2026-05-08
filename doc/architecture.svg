@@ -1,0 +1,243 @@
+<svg viewBox="0 0 1340 810" xmlns="http://www.w3.org/2000/svg"
+     font-family="system-ui,-apple-system,BlinkMacSystemFont,sans-serif">
+
+  <defs>
+    <marker id="a-ind" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6366f1"/>
+    </marker>
+    <marker id="a-grn" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#15803d"/>
+    </marker>
+    <marker id="a-amb" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d97706"/>
+    </marker>
+    <marker id="a-pur" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#9333ea"/>
+    </marker>
+    <marker id="a-red" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#e11d48"/>
+    </marker>
+    <filter id="sh">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#0000001a"/>
+    </filter>
+  </defs>
+
+  <!-- ── Background ── -->
+  <rect width="1340" height="810" fill="#f8fafc"/>
+
+  <!-- ── Title ── -->
+  <text x="670" y="38" text-anchor="middle" font-size="21" font-weight="700" fill="#0f172a">FaceRecServer — System Architecture</text>
+  <text x="670" y="60" text-anchor="middle" font-size="12" fill="#64748b">Real-time face recognition · live enrollment · WebSocket streaming · Docker deployment</text>
+
+  <!-- ════════════════════════════════════════════════════════════
+       BROWSER
+       ════════════════════════════════════════════════════════════ -->
+  <rect x="18" y="82" width="252" height="464" rx="14" fill="#eff6ff" stroke="#3b82f6" stroke-width="2" filter="url(#sh)"/>
+  <text x="144" y="107" text-anchor="middle" font-size="13" font-weight="700" fill="#1e40af">🌐  BROWSER</text>
+  <line x1="18" y1="116" x2="270" y2="116" stroke="#bfdbfe"/>
+
+  <!-- Camera -->
+  <rect x="34" y="130" width="220" height="78" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="144" y="155" text-anchor="middle" font-size="13" font-weight="600" fill="#1e3a8a">📷  Camera</text>
+  <text x="144" y="174" text-anchor="middle" font-size="11" fill="#2563eb">getUserMedia()</text>
+  <text x="144" y="191" text-anchor="middle" font-size="10" fill="#64748b">capture frames · encode base64</text>
+
+  <!-- Canvas -->
+  <rect x="34" y="254" width="220" height="78" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="144" y="279" text-anchor="middle" font-size="13" font-weight="600" fill="#1e3a8a">🖥  Canvas</text>
+  <text x="144" y="298" text-anchor="middle" font-size="11" fill="#2563eb">Annotated Feed</text>
+  <text x="144" y="315" text-anchor="middle" font-size="10" fill="#64748b">render frame · yellow overlay</text>
+
+  <!-- Enroll UI -->
+  <rect x="34" y="378" width="220" height="144" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="144" y="403" text-anchor="middle" font-size="13" font-weight="600" fill="#1e3a8a">👤  Enroll UI</text>
+  <text x="144" y="422" text-anchor="middle" font-size="11" fill="#2563eb">Unknown 1 · Unknown 2 · …</text>
+  <line x1="44" y1="432" x2="244" y2="432" stroke="#bfdbfe" stroke-dasharray="4,3"/>
+  <text x="144" y="449" text-anchor="middle" font-size="10" fill="#64748b">click face → yellow highlight</text>
+  <text x="144" y="465" text-anchor="middle" font-size="10" fill="#64748b">Add Person → one row per unknown</text>
+  <text x="144" y="481" text-anchor="middle" font-size="10" fill="#64748b">Unknown 1  [_________]</text>
+  <text x="144" y="497" text-anchor="middle" font-size="10" fill="#64748b">Unknown 2  [_________]</text>
+  <text x="144" y="513" text-anchor="middle" font-size="10" fill="#64748b">→ Save All</text>
+
+  <!-- ════════════════════════════════════════════════════════════
+       WEBSOCKET ARROWS  (Browser ↔ Server, in the 90px gap)
+       ════════════════════════════════════════════════════════════ -->
+
+  <!-- video_frame  → -->
+  <path d="M 254 168 L 368 150" stroke="#6366f1" stroke-width="2" fill="none" marker-end="url(#a-ind)"/>
+  <text x="308" y="148" text-anchor="middle" font-size="9.5" font-weight="600" fill="#4f46e5">video_frame</text>
+  <text x="308" y="161" text-anchor="middle" font-size="9" fill="#6366f1">base64 JPEG · ~15 fps</text>
+
+  <!-- server_frame  ← -->
+  <path d="M 368 294 L 254 293" stroke="#6366f1" stroke-width="2" fill="none" marker-end="url(#a-ind)"/>
+  <text x="308" y="284" text-anchor="middle" font-size="9.5" font-weight="600" fill="#4f46e5">server_frame</text>
+  <text x="308" y="308" text-anchor="middle" font-size="9" fill="#6366f1">annotated JPEG</text>
+
+  <!-- detections  ← -->
+  <path d="M 368 380 L 254 415" stroke="#6366f1" stroke-width="2" fill="none" marker-end="url(#a-ind)"/>
+  <text x="308" y="380" text-anchor="middle" font-size="9.5" font-weight="600" fill="#4f46e5">detections</text>
+  <text x="308" y="393" text-anchor="middle" font-size="9" fill="#6366f1">[{name, distance, box}]</text>
+
+  <!-- enroll_request  → -->
+  <path d="M 254 462 L 368 448" stroke="#6366f1" stroke-width="2" fill="none" marker-end="url(#a-ind)"/>
+  <text x="308" y="461" text-anchor="middle" font-size="9.5" font-weight="600" fill="#4f46e5">enroll_request</text>
+  <text x="308" y="474" text-anchor="middle" font-size="9" fill="#6366f1">{label, name}</text>
+
+  <!-- ════════════════════════════════════════════════════════════
+       SERVER
+       ════════════════════════════════════════════════════════════ -->
+  <rect x="366" y="56" width="566" height="494" rx="14" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" filter="url(#sh)"/>
+  <text x="649" y="81" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">⚙️  SERVER  —  Flask + SocketIO  ·  HTTPS :8080</text>
+  <line x1="366" y1="91" x2="932" y2="91" stroke="#bbf7d0"/>
+
+  <!-- WebSocket Handler -->
+  <rect x="384" y="106" width="248" height="88" rx="8" fill="#dcfce7" stroke="#15803d" stroke-width="1.5"/>
+  <text x="508" y="132" text-anchor="middle" font-size="13" font-weight="600" fill="#14532d">WebSocket Handler</text>
+  <text x="508" y="151" text-anchor="middle" font-size="11" fill="#16a34a">video_frame  →  decode  →  predict</text>
+  <text x="508" y="170" text-anchor="middle" font-size="10" fill="#64748b">enroll_request  →  look up label  →  enroll_at_box</text>
+
+  <!-- WS → FaceRecognizer -->
+  <line x1="508" y1="194" x2="508" y2="250" stroke="#15803d" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#a-grn)"/>
+  <text x="528" y="227" font-size="9.5" fill="#15803d">predict(frame)</text>
+
+  <!-- FaceRecognizer -->
+  <rect x="384" y="252" width="248" height="110" rx="8" fill="#dcfce7" stroke="#15803d" stroke-width="1.5"/>
+  <text x="508" y="278" text-anchor="middle" font-size="13" font-weight="600" fill="#14532d">FaceRecognizer</text>
+  <text x="508" y="297" text-anchor="middle" font-size="11" fill="#16a34a">predict · enroll_at_box · draw</text>
+  <line x1="394" y1="307" x2="622" y2="307" stroke="#bbf7d0" stroke-dasharray="4,3"/>
+  <text x="508" y="323" text-anchor="middle" font-size="10" fill="#64748b">sort unknowns left → right</text>
+  <text x="508" y="339" text-anchor="middle" font-size="10" fill="#64748b">label: name  or  "Unknown N"</text>
+  <text x="508" y="355" text-anchor="middle" font-size="10" fill="#64748b">green box = known · red box = unknown</text>
+
+  <!-- FaceRecognizer → dlib -->
+  <line x1="508" y1="362" x2="508" y2="416" stroke="#15803d" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#a-grn)"/>
+  <text x="528" y="384" font-size="9.5" fill="#15803d">face_locations()</text>
+  <text x="528" y="398" font-size="9.5" fill="#15803d">face_encodings()</text>
+
+  <!-- dlib / face_recognition -->
+  <rect x="384" y="418" width="248" height="106" rx="8" fill="#bbf7d0" stroke="#15803d" stroke-width="1.5"/>
+  <text x="508" y="444" text-anchor="middle" font-size="13" font-weight="600" fill="#14532d">face_recognition</text>
+  <text x="508" y="463" text-anchor="middle" font-size="11" fill="#16a34a">dlib ResNet  ·  128-d embeddings</text>
+  <line x1="394" y1="473" x2="622" y2="473" stroke="#bbf7d0" stroke-dasharray="4,3"/>
+  <text x="508" y="490" text-anchor="middle" font-size="10" fill="#64748b">Euclidean distance matching</text>
+  <text x="508" y="507" text-anchor="middle" font-size="10" fill="#64748b">99.38% LFW benchmark accuracy</text>
+
+  <!-- ════════════════════════════════════════════════════════════
+       STORAGE ARROWS  (FaceRecognizer ↔ Storage)
+       ════════════════════════════════════════════════════════════ -->
+
+  <!-- compare distances → -->
+  <path d="M 632 285 L 958 258" stroke="#d97706" stroke-width="2" fill="none" marker-end="url(#a-amb)"/>
+  <text x="792" y="256" text-anchor="middle" font-size="9.5" font-weight="600" fill="#b45309">face_distance()  —  compare</text>
+
+  <!-- stored vectors ← -->
+  <path d="M 958 310 L 632 330" stroke="#d97706" stroke-width="2" fill="none" marker-end="url(#a-amb)"/>
+  <text x="792" y="338" text-anchor="middle" font-size="9.5" font-weight="600" fill="#b45309">stored vectors  —  return best match</text>
+
+  <!-- enroll: append vector → (dashed) -->
+  <path d="M 632 360 L 958 380" stroke="#9333ea" stroke-width="1.8" fill="none" stroke-dasharray="6,3" marker-end="url(#a-pur)"/>
+  <text x="792" y="360" text-anchor="middle" font-size="9.5" fill="#7c3aed">enroll: append 128-d vector</text>
+
+  <!-- ════════════════════════════════════════════════════════════
+       STORAGE
+       ════════════════════════════════════════════════════════════ -->
+  <rect x="956" y="148" width="366" height="290" rx="14" fill="#fffbeb" stroke="#d97706" stroke-width="2" filter="url(#sh)"/>
+  <text x="1139" y="173" text-anchor="middle" font-size="13" font-weight="700" fill="#78350f">💾  STORAGE</text>
+  <line x1="956" y1="183" x2="1322" y2="183" stroke="#fde68a"/>
+
+  <!-- JSON box -->
+  <rect x="972" y="194" width="334" height="226" rx="8" fill="#fef9c3" stroke="#b45309" stroke-width="1.5"/>
+  <text x="1139" y="220" text-anchor="middle" font-size="13" font-weight="600" fill="#78350f">face_embeddings.json</text>
+  <line x1="982" y1="230" x2="1296" y2="230" stroke="#b45309" stroke-dasharray="4,3"/>
+  <text x="1139" y="252" text-anchor="middle" font-size="11" fill="#92400e">{</text>
+  <text x="1139" y="272" text-anchor="middle" font-size="11" fill="#92400e">  "Alice":   [ [128-d], [128-d], … ],</text>
+  <text x="1139" y="292" text-anchor="middle" font-size="11" fill="#92400e">  "Mohamed": [ [128-d], … ],</text>
+  <text x="1139" y="312" text-anchor="middle" font-size="11" fill="#92400e">  "Mekha":   [ [128-d], … ]</text>
+  <text x="1139" y="332" text-anchor="middle" font-size="11" fill="#92400e">}</text>
+  <line x1="982" y1="344" x2="1296" y2="344" stroke="#b45309" stroke-dasharray="4,3"/>
+  <text x="1139" y="362" text-anchor="middle" font-size="10" fill="#64748b">persists across restarts</text>
+  <text x="1139" y="378" text-anchor="middle" font-size="10" fill="#64748b">distance_threshold: 0.5  ·  model: hog</text>
+  <text x="1139" y="396" text-anchor="middle" font-size="10" fill="#64748b">grows on every live enrollment</text>
+
+  <!-- ════════════════════════════════════════════════════════════
+       DEPLOYMENT  (bottom strip)
+       ════════════════════════════════════════════════════════════ -->
+  <rect x="18" y="604" width="1304" height="190" rx="14" fill="#faf5ff" stroke="#9333ea" stroke-width="2" filter="url(#sh)"/>
+  <text x="670" y="628" text-anchor="middle" font-size="13" font-weight="700" fill="#581c87">🚀  DEPLOYMENT</text>
+  <line x1="18" y1="638" x2="1322" y2="638" stroke="#e9d5ff"/>
+
+  <!-- ── Docker Compose ── -->
+  <rect x="32" y="648" width="700" height="132" rx="10" fill="#f3e8ff" stroke="#a855f7" stroke-width="1.5"/>
+  <text x="382" y="669" text-anchor="middle" font-size="12" font-weight="600" fill="#6b21a8">🐳  Docker Compose</text>
+
+  <!-- models container -->
+  <rect x="46" y="680" width="188" height="86" rx="6" fill="#e9d5ff" stroke="#9333ea" stroke-width="1.2"/>
+  <text x="140" y="702" text-anchor="middle" font-size="11" font-weight="600" fill="#581c87">facerecserver-models</text>
+  <text x="140" y="718" text-anchor="middle" font-size="10" fill="#7c3aed">Debian slim</text>
+  <text x="140" y="733" text-anchor="middle" font-size="10" fill="#7c3aed">unpack model-bundle.tar.gz</text>
+  <text x="140" y="748" text-anchor="middle" font-size="10" fill="#64748b">exits  (service_completed)</text>
+
+  <!-- arrow models → volume -->
+  <line x1="234" y1="723" x2="274" y2="723" stroke="#9333ea" stroke-width="1.8" marker-end="url(#a-pur)"/>
+  <text x="254" y="716" text-anchor="middle" font-size="9" fill="#7c3aed">cp</text>
+
+  <!-- shared volume -->
+  <rect x="274" y="685" width="162" height="76" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="355" y="710" text-anchor="middle" font-size="11" font-weight="600" fill="#581c87">shared volume</text>
+  <text x="355" y="728" text-anchor="middle" font-size="10" fill="#7c3aed">face_embeddings.json</text>
+  <text x="355" y="748" text-anchor="middle" font-size="9" fill="#64748b">/app/model  (rw)</text>
+
+  <!-- arrow volume → app -->
+  <line x1="436" y1="723" x2="476" y2="723" stroke="#9333ea" stroke-width="1.8" marker-end="url(#a-pur)"/>
+  <text x="456" y="716" text-anchor="middle" font-size="9" fill="#7c3aed">mount</text>
+
+  <!-- app container -->
+  <rect x="476" y="680" width="242" height="86" rx="6" fill="#e9d5ff" stroke="#9333ea" stroke-width="1.2"/>
+  <text x="597" y="702" text-anchor="middle" font-size="11" font-weight="600" fill="#581c87">facerecserver-app</text>
+  <text x="597" y="718" text-anchor="middle" font-size="10" fill="#7c3aed">Python 3.12  +  dlib</text>
+  <text x="597" y="733" text-anchor="middle" font-size="10" fill="#7c3aed">Flask + SocketIO  ·  HTTPS :8080</text>
+  <text x="597" y="748" text-anchor="middle" font-size="10" fill="#64748b">depends_on: models ✓</text>
+
+  <!-- ── GitHub Actions ── -->
+  <rect x="752" y="648" width="556" height="132" rx="10" fill="#fff1f2" stroke="#e11d48" stroke-width="1.5"/>
+  <text x="1030" y="669" text-anchor="middle" font-size="12" font-weight="600" fill="#9f1239">⚡  GitHub Actions  —  publish.yml</text>
+
+  <!-- test job -->
+  <rect x="766" y="680" width="148" height="86" rx="6" fill="#ffe4e6" stroke="#f43f5e" stroke-width="1.2"/>
+  <text x="840" y="702" text-anchor="middle" font-size="11" font-weight="600" fill="#9f1239">test</text>
+  <text x="840" y="718" text-anchor="middle" font-size="9.5" fill="#e11d48">every push / PR</text>
+  <text x="840" y="733" text-anchor="middle" font-size="9.5" fill="#e11d48">uv sync · smoke import</text>
+  <text x="840" y="748" text-anchor="middle" font-size="9.5" fill="#64748b">docker build</text>
+
+  <!-- test → push-app -->
+  <line x1="914" y1="706" x2="950" y2="706" stroke="#e11d48" stroke-width="1.8" marker-end="url(#a-red)"/>
+  <!-- test → push-models -->
+  <line x1="914" y1="740" x2="950" y2="740" stroke="#e11d48" stroke-width="1.8" marker-end="url(#a-red)"/>
+
+  <!-- push-app job -->
+  <rect x="950" y="680" width="162" height="38" rx="6" fill="#ffe4e6" stroke="#f43f5e" stroke-width="1.2"/>
+  <text x="1031" y="697" text-anchor="middle" font-size="10.5" font-weight="600" fill="#9f1239">build-and-push-app</text>
+  <text x="1031" y="712" text-anchor="middle" font-size="9.5" fill="#e11d48">main + tags  →  Docker Hub</text>
+
+  <!-- push-models job -->
+  <rect x="950" y="726" width="162" height="40" rx="6" fill="#ffe4e6" stroke="#f43f5e" stroke-width="1.2"/>
+  <text x="1031" y="743" text-anchor="middle" font-size="10.5" font-weight="600" fill="#9f1239">build-and-push-models</text>
+  <text x="1031" y="759" text-anchor="middle" font-size="9.5" fill="#e11d48">tags only  →  Docker Hub</text>
+
+  <!-- Docker Hub destination -->
+  <rect x="1132" y="685" width="160" height="81" rx="6" fill="#ffe4e6" stroke="#f43f5e" stroke-width="1.2"/>
+  <text x="1212" y="710" text-anchor="middle" font-size="12">🐋</text>
+  <text x="1212" y="728" text-anchor="middle" font-size="11" font-weight="600" fill="#9f1239">Docker Hub</text>
+  <text x="1212" y="745" text-anchor="middle" font-size="9.5" fill="#e11d48">facerecserver-app</text>
+  <text x="1212" y="758" text-anchor="middle" font-size="9.5" fill="#e11d48">facerecserver-models</text>
+
+  <!-- push-app + push-models → Docker Hub -->
+  <line x1="1112" y1="699" x2="1132" y2="710" stroke="#e11d48" stroke-width="1.5" marker-end="url(#a-red)"/>
+  <line x1="1112" y1="746" x2="1132" y2="746" stroke="#e11d48" stroke-width="1.5" marker-end="url(#a-red)"/>
+
+</svg>

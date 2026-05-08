@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FaceRecServer — Documentation</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #fff;
+  color: #1e293b;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* ── Cover ── */
+.cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 80px 60px;
+  background: #0f172a;
+  color: #f8fafc;
+  page-break-after: always;
+}
+.cover .badge {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 999px;
+  margin-bottom: 32px;
+}
+.cover h1 {
+  font-size: 3.2rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+}
+.cover h1 span { color: #818cf8; }
+.cover .tagline {
+  font-size: 1.05rem;
+  color: #94a3b8;
+  max-width: 560px;
+  margin-bottom: 60px;
+}
+.cover-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  width: 100%;
+  max-width: 640px;
+}
+.cover-stat {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 16px;
+}
+.cover-stat .val { font-size: 1.5rem; font-weight: 700; color: #818cf8; }
+.cover-stat .lbl { font-size: 0.72rem; color: #64748b; margin-top: 4px; }
+.cover-foot {
+  margin-top: auto;
+  padding-top: 40px;
+  font-size: 0.8rem;
+  color: #475569;
+}
+
+/* ── Page layout ── */
+.page {
+  padding: 52px 64px 44px;
+  page-break-after: always;
+  min-height: 100vh;
+}
+.page:last-child { page-break-after: auto; }
+
+/* ── Chapter heading ── */
+.chapter-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+h2.chapter {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 22px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+/* ── Body text ── */
+p { margin-bottom: 14px; color: #334155; }
+p:last-child { margin-bottom: 0; }
+
+/* ── Section heading (inside a chapter) ── */
+h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 28px 0 10px;
+}
+h3:first-child { margin-top: 0; }
+
+/* ── Code / mono ── */
+code {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.82em;
+  color: #7c3aed;
+}
+pre {
+  background: #0f172a;
+  border-radius: 8px;
+  padding: 18px 20px;
+  overflow-x: auto;
+  margin: 14px 0 20px;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: #e2e8f0;
+}
+
+/* ── Callout boxes ── */
+.callouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.callout {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 3px solid #6366f1;
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+.callout.green  { border-left-color: #16a34a; }
+.callout.amber  { border-left-color: #d97706; }
+.callout.purple { border-left-color: #7c3aed; }
+.callout.red    { border-left-color: #dc2626; }
+.callout strong { display: block; font-size: 0.78rem; font-weight: 700; color: #334155; margin-bottom: 4px; }
+.callout span   { font-size: 0.78rem; color: #64748b; }
+
+/* ── Problem card ── */
+.problem {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+.problem-header {
+  background: #f8fafc;
+  padding: 12px 18px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.problem-num {
+  background: #6366f1;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.problem-title { font-size: 0.92rem; font-weight: 700; color: #0f172a; }
+.problem-body { padding: 14px 18px; }
+.problem-body p { font-size: 0.85rem; }
+.problem-section { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #94a3b8; margin: 12px 0 6px; }
+.problem-section:first-child { margin-top: 0; }
+
+/* ── Table ── */
+table { width: 100%; border-collapse: collapse; margin: 14px 0 20px; font-size: 0.84rem; }
+th { background: #f1f5f9; font-weight: 700; color: #334155; padding: 8px 12px; text-align: left; border: 1px solid #e2e8f0; }
+td { padding: 8px 12px; border: 1px solid #e2e8f0; color: #475569; }
+tr:nth-child(even) td { background: #f8fafc; }
+
+/* ── Arch section wrapper ── */
+.arch-section {
+  margin-bottom: 40px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.arch-section:last-child { border-bottom: none; margin-bottom: 0; }
+.arch-num {
+  display: inline-block;
+  background: #6366f1;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+.arch-section h3 { margin-top: 4px; font-size: 1.05rem; }
+.arch-section .desc {
+  font-size: 0.87rem;
+  color: #64748b;
+  max-width: 700px;
+  margin: 6px 0 18px;
+}
+.diagram-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0 18px;
+}
+.diagram-wrap svg { max-width: 100%; height: auto; }
+
+/* ── Print ── */
+@media print {
+  .page, .cover { page-break-after: always; }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .problem { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════ COVER ════════════════ -->
+<div class="cover">
+  <div class="badge">Debi Hackathon · May 2026</div>
+  <h1>Face<span>Rec</span>Server</h1>
+  <p class="tagline">Real-time, browser-based face recognition with live enrollment —
+    no offline training required.</p>
+  <div class="cover-grid">
+    <div class="cover-stat"><div class="val">128-d</div><div class="lbl">dlib embedding size</div></div>
+    <div class="cover-stat"><div class="val">99.38%</div><div class="lbl">LFW accuracy</div></div>
+    <div class="cover-stat"><div class="val">&lt; 5 s</div><div class="lbl">enroll-to-recognise</div></div>
+    <div class="cover-stat"><div class="val">HTTPS</div><div class="lbl">WebSocket stream</div></div>
+    <div class="cover-stat"><div class="val">2-image</div><div class="lbl">Docker stack</div></div>
+    <div class="cover-stat"><div class="val">CI/CD</div><div class="lbl">GitHub Actions</div></div>
+  </div>
+  <div class="cover-foot">Mohamed Nasser · FaceRecServer v0.1.0</div>
+</div>
+
+<!-- ════════════════ 1 · OVERVIEW ════════════════ -->
+<div class="page">
+  <div class="chapter-label">Chapter 01</div>
+  <h2 class="chapter">Overview</h2>
+
+  <p>
+    FaceRecServer is a real-time, browser-based face recognition system built for the Debi Hackathon.
+    It solves a practical problem: identifying people by name from a live camera feed, with no offline
+    training step and no special hardware required.
+  </p>
+  <p>
+    The core idea is simple. A user opens the web app in any modern browser, points their camera at a
+    group of people, and the server draws a labelled bounding box around every face it sees — green for
+    someone it recognises, red for an unknown. When the server encounters an unknown face, the user can
+    enroll that person live: click "Add Person", type their name, and from that moment on the system
+    recognises them. The entire enrollment-to-recognition cycle takes under five seconds.
+  </p>
+  <p>
+    The system is self-contained. It runs over HTTPS (required for camera access), streams annotated
+    video back to the browser over WebSocket, and persists all known faces to a JSON file that survives
+    server restarts. It ships as a Docker Compose stack and has a full CI/CD pipeline on GitHub Actions.
+  </p>
+
+  <div class="callouts" style="margin-top:28px;">
+    <div class="callout">
+      <strong>No training required</strong>
+      <span>Enroll a person live from the camera feed in under 5 seconds. No dataset collection, no model retraining.</span>
+    </div>
+    <div class="callout green">
+      <strong>High accuracy</strong>
+      <span>dlib ResNet trained on 3 million faces, 99.38% LFW benchmark. Configurable distance threshold.</span>
+    </div>
+    <div class="callout purple">
+      <strong>Browser-native</strong>
+      <span>Pure WebSocket stream — no plugins, no proprietary SDK. Works in any modern browser over HTTPS.</span>
+    </div>
+    <div class="callout amber">
+      <strong>Production-shaped</strong>
+      <span>Docker Compose stack, GitHub Actions CI/CD, TLS, thread-safe storage. Ready to deploy.</span>
+    </div>
+  </div>
+
+  <h3 style="margin-top:32px;">Project structure</h3>
+  <pre>FaceRecServer/
+├── facerecserver/
+│   ├── app.py          Flask + SocketIO server (video_frame, enroll_request)
+│   ├── inference.py    FaceRecognizer class (predict, enroll_at_box, draw)
+│   └── paths.py        Project root resolution, directory constants
+├── scripts/
+│   ├── run_server.py           Start the HTTPS server
+│   ├── recognize_faces.py      Standalone OpenCV live test (no Flask)
+│   └── package_model_bundle.py Package face_embeddings.json for Docker release
+├── config/
+│   └── recognizer.json         distance_threshold, detection_model
+├── model/
+│   └── face_embeddings.json    {"Alice": [[128-d vector], …], …}
+├── templates/index.html        Browser UI
+├── static/script.js            WebSocket client, canvas overlay, enroll form
+├── certificates/               Self-signed TLS cert + private key
+├── infra/docker/
+│   ├── Dockerfile.app          Python 3.12 + dlib build deps
+│   ├── Dockerfile.models       Debian slim, unpacks embeddings into shared volume
+│   ├── compose.yaml            Two-service stack (models → app)
+│   └── copy_models.sh          Copies bundle into shared Docker volume
+└── .github/workflows/
+    └── publish.yml             CI: test → push app image → push models image</pre>
+</div>
+
+<!-- ════════════════ 2 · ARCHITECTURE ════════════════ -->
+<div class="page">
+  <div class="chapter-label">Chapter 02</div>
+  <h2 class="chapter">Architecture</h2>
+
+  <!-- 2.1 System Overview -->
+  <div class="arch-section">
+    <span class="arch-num">2.1</span>
+    <h3>System Overview</h3>
+    <p class="desc">
+      The browser captures camera frames and sends them over a WebSocket to the Flask server.
+      The server runs face recognition, annotates the frame with coloured bounding boxes, and
+      streams the result back alongside a structured list of detections.
+      All known-face embeddings live in a single JSON file on disk.
+    </p>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 880 360" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Arial,sans-serif">
+        <defs>
+          <marker id="a1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#6366f1"/></marker>
+          <marker id="a1a" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#d97706"/></marker>
+          <filter id="sh"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.07"/></filter>
+        </defs>
+        <rect x="20" y="20" width="220" height="320" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5" filter="url(#sh)"/>
+        <text x="130" y="46" text-anchor="middle" font-size="11" font-weight="700" fill="#1d4ed8">BROWSER</text>
+        <rect x="40" y="60" width="180" height="46" rx="7" fill="#dbeafe" stroke="#93c5fd" stroke-width="1"/>
+        <text x="130" y="79" text-anchor="middle" font-size="10" font-weight="600" fill="#1e40af">Camera</text>
+        <text x="130" y="95" text-anchor="middle" font-size="9.5" fill="#3b82f6">getUserMedia()</text>
+        <rect x="40" y="122" width="180" height="46" rx="7" fill="#dbeafe" stroke="#93c5fd" stroke-width="1"/>
+        <text x="130" y="141" text-anchor="middle" font-size="10" font-weight="600" fill="#1e40af">Canvas</text>
+        <text x="130" y="157" text-anchor="middle" font-size="9.5" fill="#3b82f6">Annotated frame display</text>
+        <rect x="40" y="184" width="180" height="46" rx="7" fill="#dbeafe" stroke="#93c5fd" stroke-width="1"/>
+        <text x="130" y="203" text-anchor="middle" font-size="10" font-weight="600" fill="#1e40af">Enroll UI</text>
+        <text x="130" y="219" text-anchor="middle" font-size="9.5" fill="#3b82f6">Unknown 1 / 2 / 3 …</text>
+        <rect x="330" y="20" width="260" height="320" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5" filter="url(#sh)"/>
+        <text x="460" y="46" text-anchor="middle" font-size="11" font-weight="700" fill="#15803d">SERVER  (Flask + SocketIO · HTTPS :8080)</text>
+        <rect x="350" y="60" width="220" height="46" rx="7" fill="#dcfce7" stroke="#86efac" stroke-width="1"/>
+        <text x="460" y="79" text-anchor="middle" font-size="10" font-weight="600" fill="#166534">WebSocket Handler</text>
+        <text x="460" y="95" text-anchor="middle" font-size="9.5" fill="#16a34a">decode · store frame · emit</text>
+        <rect x="350" y="130" width="220" height="46" rx="7" fill="#dcfce7" stroke="#86efac" stroke-width="1"/>
+        <text x="460" y="149" text-anchor="middle" font-size="10" font-weight="600" fill="#166534">FaceRecognizer</text>
+        <text x="460" y="165" text-anchor="middle" font-size="9.5" fill="#16a34a">predict · enroll_at_box · draw</text>
+        <rect x="350" y="200" width="220" height="46" rx="7" fill="#dcfce7" stroke="#86efac" stroke-width="1"/>
+        <text x="460" y="219" text-anchor="middle" font-size="10" font-weight="600" fill="#166534">face_recognition (dlib ResNet)</text>
+        <text x="460" y="235" text-anchor="middle" font-size="9.5" fill="#16a34a">128-d embeddings · Euclidean distance</text>
+        <rect x="680" y="120" width="180" height="100" rx="10" fill="#fffbeb" stroke="#d97706" stroke-width="1.5" filter="url(#sh)"/>
+        <text x="770" y="146" text-anchor="middle" font-size="11" font-weight="700" fill="#b45309">STORAGE</text>
+        <text x="770" y="162" text-anchor="middle" font-size="10" fill="#d97706">face_embeddings.json</text>
+        <text x="770" y="178" text-anchor="middle" font-size="9" fill="#92400e">{ "Alice": [[128-d], …] }</text>
+        <text x="770" y="194" text-anchor="middle" font-size="9" fill="#92400e">{ "Bob":  [[128-d], …] }</text>
+        <line x1="220" y1="83" x2="330" y2="83" stroke="#6366f1" stroke-width="1.5" marker-end="url(#a1)"/>
+        <text x="275" y="78" text-anchor="middle" font-size="8.5" fill="#6366f1">video_frame</text>
+        <line x1="330" y1="148" x2="220" y2="148" stroke="#6366f1" stroke-width="1.5" marker-end="url(#a1)"/>
+        <text x="275" y="143" text-anchor="middle" font-size="8.5" fill="#6366f1">server_frame</text>
+        <line x1="330" y1="213" x2="220" y2="213" stroke="#6366f1" stroke-width="1.5" marker-end="url(#a1)"/>
+        <text x="275" y="208" text-anchor="middle" font-size="8.5" fill="#6366f1">detections</text>
+        <line x1="220" y1="270" x2="330" y2="270" stroke="#6366f1" stroke-width="1.5" marker-end="url(#a1)"/>
+        <text x="275" y="265" text-anchor="middle" font-size="8.5" fill="#6366f1">enroll_request</text>
+        <line x1="570" y1="170" x2="680" y2="170" stroke="#d97706" stroke-width="1.5" marker-end="url(#a1a)"/>
+        <text x="625" y="163" text-anchor="middle" font-size="8.5" fill="#d97706">compare / enroll</text>
+      </svg>
+    </div>
+    <div class="callouts">
+      <div class="callout"><strong>4 WebSocket events</strong><span>video_frame →, ← server_frame, ← detections, enroll_request →. All communication runs over a single persistent socket.</span></div>
+      <div class="callout green"><strong>Stateless per frame</strong><span>Each frame is processed independently. The server holds only the most recent frame in memory for enrollment lookups.</span></div>
+      <div class="callout amber"><strong>JSON persistence</strong><span>face_embeddings.json is the only stateful component. It survives restarts and is safe to back up or migrate.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Architecture continued — Recognition Flow -->
+<div class="page">
+  <div class="arch-section">
+    <span class="arch-num">2.2</span>
+    <h3>Recognition Flow (per frame)</h3>
+    <p class="desc">
+      Every frame triggers a four-step pipeline: detect bounding boxes, compute 128-d embeddings,
+      compare against the stored database, and label each face. Faces below the distance threshold
+      are named; faces above it are numbered Unknown 1, 2, 3 … sorted left-to-right for stable labels.
+    </p>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 820 400" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Arial,sans-serif">
+        <defs>
+          <marker id="ra" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#6366f1"/></marker>
+          <marker id="ra2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#16a34a"/></marker>
+        </defs>
+        <rect x="20"  y="20" width="170" height="360" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+        <text x="105" y="43" text-anchor="middle" font-size="10" font-weight="700" fill="#1d4ed8">Browser</text>
+        <rect x="210" y="20" width="170" height="360" rx="8" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+        <text x="295" y="43" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">Server</text>
+        <rect x="400" y="20" width="200" height="360" rx="8" fill="#fafafa" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="500" y="43" text-anchor="middle" font-size="10" font-weight="700" fill="#334155">FaceRecognizer</text>
+        <rect x="620" y="20" width="180" height="360" rx="8" fill="#fffbeb" stroke="#fde68a" stroke-width="1"/>
+        <text x="710" y="43" text-anchor="middle" font-size="10" font-weight="700" fill="#b45309">JSON DB</text>
+
+        <rect x="30"  y="62" width="150" height="34" rx="6" fill="#dbeafe" stroke="#93c5fd" stroke-width="1"/>
+        <text x="105" y="83" text-anchor="middle" font-size="9.5" fill="#1e40af">video_frame (JPEG)</text>
+
+        <rect x="220" y="62" width="150" height="34" rx="6" fill="#dcfce7" stroke="#86efac" stroke-width="1"/>
+        <text x="295" y="83" text-anchor="middle" font-size="9.5" fill="#166534">decode → numpy frame</text>
+
+        <rect x="410" y="62" width="180" height="34" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+        <text x="500" y="79" text-anchor="middle" font-size="9.5" fill="#334155">face_locations() — HOG</text>
+        <text x="500" y="91" text-anchor="middle" font-size="8.5" fill="#64748b">bounding boxes</text>
+
+        <rect x="410" y="120" width="180" height="34" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+        <text x="500" y="137" text-anchor="middle" font-size="9.5" fill="#334155">face_encodings()</text>
+        <text x="500" y="149" text-anchor="middle" font-size="8.5" fill="#64748b">128-d vector per face</text>
+
+        <rect x="630" y="120" width="160" height="34" rx="6" fill="#fef3c7" stroke="#fcd34d" stroke-width="1"/>
+        <text x="710" y="141" text-anchor="middle" font-size="9.5" fill="#92400e">read stored vectors</text>
+
+        <rect x="410" y="178" width="180" height="34" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+        <text x="500" y="195" text-anchor="middle" font-size="9.5" fill="#334155">face_distance()</text>
+        <text x="500" y="207" text-anchor="middle" font-size="8.5" fill="#64748b">Euclidean vs every vector</text>
+
+        <rect x="410" y="236" width="180" height="50" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+        <text x="500" y="254" text-anchor="middle" font-size="9.5" fill="#334155">sort left→right</text>
+        <text x="500" y="268" text-anchor="middle" font-size="9" fill="#16a34a">dist &lt; 0.5  →  name</text>
+        <text x="500" y="281" text-anchor="middle" font-size="9" fill="#dc2626">dist ≥ 0.5  →  Unknown N</text>
+
+        <rect x="220" y="316" width="150" height="34" rx="6" fill="#dcfce7" stroke="#86efac" stroke-width="1"/>
+        <text x="295" y="333" text-anchor="middle" font-size="9.5" fill="#166534">draw() + JPEG encode</text>
+        <text x="295" y="344" text-anchor="middle" font-size="8.5" fill="#16a34a">emit server_frame + detections</text>
+
+        <rect x="30"  y="316" width="150" height="34" rx="6" fill="#dbeafe" stroke="#93c5fd" stroke-width="1"/>
+        <text x="105" y="333" text-anchor="middle" font-size="9.5" fill="#1e40af">render canvas</text>
+        <text x="105" y="344" text-anchor="middle" font-size="8.5" fill="#3b82f6">yellow overlay if selected</text>
+
+        <line x1="180" y1="79" x2="220" y2="79" stroke="#6366f1" stroke-width="1.5" marker-end="url(#ra)"/>
+        <line x1="295" y1="96" x2="500" y2="62" stroke="#6366f1" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#ra)"/>
+        <line x1="500" y1="96" x2="500" y2="120" stroke="#334155" stroke-width="1.5" marker-end="url(#ra2)"/>
+        <line x1="590" y1="137" x2="630" y2="137" stroke="#d97706" stroke-width="1.5" marker-end="url(#ra)"/>
+        <line x1="500" y1="154" x2="500" y2="178" stroke="#334155" stroke-width="1.5" marker-end="url(#ra2)"/>
+        <line x1="500" y1="212" x2="500" y2="236" stroke="#334155" stroke-width="1.5" marker-end="url(#ra2)"/>
+        <line x1="410" y1="268" x2="295" y2="316" stroke="#16a34a" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#ra2)"/>
+        <line x1="220" y1="333" x2="180" y2="333" stroke="#6366f1" stroke-width="1.5" marker-end="url(#ra)"/>
+      </svg>
+    </div>
+    <div class="callouts">
+      <div class="callout"><strong>HOG Detection</strong><span>Fast, CPU-friendly. Finds bounding boxes in each frame without a GPU.</span></div>
+      <div class="callout green"><strong>ResNet Encoding</strong><span>dlib ResNet produces a 128-d vector that encodes face geometry. Same person → close vectors across lighting and angle.</span></div>
+      <div class="callout amber"><strong>Distance Threshold 0.5</strong><span>Euclidean distance below 0.5 declares a match. Configurable in config/recognizer.json.</span></div>
+      <div class="callout red"><strong>Left→Right Sort</strong><span>Stable Unknown N labels across frames, regardless of internal detection order.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Architecture continued — Enrollment Flow -->
+<div class="page">
+  <div class="arch-section">
+    <span class="arch-num">2.3</span>
+    <h3>Enrollment Flow</h3>
+    <p class="desc">
+      When an unknown face appears, the user clicks it on the canvas, types a name in the
+      Add Person panel, and clicks Save All. The server extracts the face embedding from the
+      stored frame at that exact bounding box and appends it to the JSON database.
+      The person is recognised on the very next frame.
+    </p>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 760 390" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Arial,sans-serif">
+        <defs><marker id="ea" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#6366f1"/></marker></defs>
+
+        <rect x="30" y="20" width="700" height="52" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+        <circle cx="66" cy="46" r="13" fill="#3b82f6"/>
+        <text x="66" y="51" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">1</text>
+        <text x="92" y="40" font-size="10.5" font-weight="600" fill="#1e40af">Server labels unknown face</text>
+        <text x="92" y="56" font-size="9.5" fill="#3b82f6">Assigns "Unknown N" sorted left→right. Emits detections with name, distance, bounding box coordinates.</text>
+
+        <line x1="380" y1="72" x2="380" y2="88" stroke="#6366f1" stroke-width="1.5" marker-end="url(#ea)"/>
+
+        <rect x="30" y="88" width="700" height="52" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5"/>
+        <circle cx="66" cy="114" r="13" fill="#3b82f6"/>
+        <text x="66" y="119" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">2</text>
+        <text x="92" y="108" font-size="10.5" font-weight="600" fill="#1e40af">User clicks the face on canvas</text>
+        <text x="92" y="124" font-size="9.5" fill="#3b82f6">Click mapped through letterbox transform → frame coords → nearest face centre → selectedLabel = "Unknown N". Yellow box drawn.</text>
+
+        <line x1="380" y1="140" x2="380" y2="156" stroke="#6366f1" stroke-width="1.5" marker-end="url(#ea)"/>
+
+        <rect x="30" y="156" width="700" height="64" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+        <circle cx="66" cy="188" r="13" fill="#16a34a"/>
+        <text x="66" y="193" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">3</text>
+        <text x="92" y="174" font-size="10.5" font-weight="600" fill="#166534">User opens "Add Person" and fills in names</text>
+        <text x="92" y="190" font-size="9.5" fill="#16a34a">Panel lists every Unknown N with a text input. Selected row highlighted in yellow. User types name(s) and clicks Save All.</text>
+        <text x="92" y="208" font-size="9" fill="#94a3b8" font-style="italic">Unknown 1 [________]    Unknown 2 [ Alice ]  ← focused    Unknown 3 [________]</text>
+
+        <line x1="380" y1="220" x2="380" y2="236" stroke="#6366f1" stroke-width="1.5" marker-end="url(#ea)"/>
+
+        <rect x="30" y="236" width="700" height="52" rx="8" fill="#faf5ff" stroke="#c4b5fd" stroke-width="1.5"/>
+        <circle cx="66" cy="262" r="13" fill="#7c3aed"/>
+        <text x="66" y="267" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">4</text>
+        <text x="92" y="256" font-size="10.5" font-weight="600" fill="#4c1d95">Browser emits enroll_request per filled row</text>
+        <text x="92" y="272" font-size="9.5" fill="#7c3aed">socket.emit("enroll_request", {"{"}label: "Unknown 2", name: "Alice"{"}"}).  Blank rows are skipped silently.</text>
+
+        <line x1="380" y1="288" x2="380" y2="304" stroke="#6366f1" stroke-width="1.5" marker-end="url(#ea)"/>
+
+        <rect x="30" y="304" width="700" height="66" rx="8" fill="#faf5ff" stroke="#c4b5fd" stroke-width="1.5"/>
+        <circle cx="66" cy="337" r="13" fill="#7c3aed"/>
+        <text x="66" y="342" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">5</text>
+        <text x="92" y="322" font-size="10.5" font-weight="600" fill="#4c1d95">Server extracts embedding and saves to JSON</text>
+        <text x="92" y="338" font-size="9.5" fill="#7c3aed">Looks up "Unknown 2" in _last_results → gets box. face_encodings(frame, [box]) → 128-d vector. Appended to face_embeddings.json under "Alice".</text>
+        <text x="92" y="356" font-size="9.5" fill="#16a34a">Emits "enrolled" → client closes form. "Alice" recognised on the very next frame. ✓</text>
+      </svg>
+    </div>
+    <div class="callouts">
+      <div class="callout"><strong>Zero training time</strong><span>Under 5 seconds end-to-end. No dataset, no retraining.</span></div>
+      <div class="callout green"><strong>Batch enrollment</strong><span>All unknowns named in one Save All click. One enroll_request fires per filled row in parallel.</span></div>
+      <div class="callout amber"><strong>Immediate persistence</strong><span>Vectors are appended to JSON on the spot. Survives restarts. Multiple enrollments per person improve accuracy under different lighting.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Architecture continued — Docker + Components -->
+<div class="page">
+  <div class="arch-section">
+    <span class="arch-num">2.4</span>
+    <h3>Docker Deployment</h3>
+    <p class="desc">
+      Two images work together via Docker Compose. The models container unpacks the embeddings
+      into a shared volume and exits. The app container starts after, mounts the volume,
+      and serves the recognition API. GitHub Actions builds and pushes both images automatically.
+    </p>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 820 300" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Arial,sans-serif">
+        <defs>
+          <marker id="dka" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#7c3aed"/></marker>
+          <marker id="dkb" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#d97706"/></marker>
+        </defs>
+        <!-- CI strip -->
+        <rect x="20" y="10" width="780" height="90" rx="8" fill="#f5f3ff" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="410" y="30" text-anchor="middle" font-size="10" font-weight="700" fill="#6d28d9">GitHub Actions CI/CD</text>
+        <rect x="36" y="38" width="180" height="50" rx="6" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1"/>
+        <text x="126" y="57" text-anchor="middle" font-size="10" font-weight="600" fill="#4c1d95">test</text>
+        <text x="126" y="70" text-anchor="middle" font-size="8.5" fill="#7c3aed">every push &amp; PR</text>
+        <text x="126" y="81" text-anchor="middle" font-size="8" fill="#94a3b8">uv sync · smoke import · build</text>
+        <rect x="318" y="38" width="180" height="50" rx="6" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1"/>
+        <text x="408" y="57" text-anchor="middle" font-size="10" font-weight="600" fill="#4c1d95">build-and-push-app</text>
+        <text x="408" y="70" text-anchor="middle" font-size="8.5" fill="#7c3aed">main + tags</text>
+        <text x="408" y="81" text-anchor="middle" font-size="8" fill="#94a3b8">push facerecserver-app</text>
+        <rect x="600" y="38" width="180" height="50" rx="6" fill="#ede9fe" stroke="#c4b5fd" stroke-width="1"/>
+        <text x="690" y="57" text-anchor="middle" font-size="10" font-weight="600" fill="#4c1d95">build-and-push-models</text>
+        <text x="690" y="70" text-anchor="middle" font-size="8.5" fill="#7c3aed">version tags only</text>
+        <text x="690" y="81" text-anchor="middle" font-size="8" fill="#94a3b8">push facerecserver-models</text>
+        <line x1="216" y1="63" x2="318" y2="63" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#dka)"/>
+        <line x1="498" y1="63" x2="600" y2="63" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#dka)"/>
+        <!-- Compose strip -->
+        <rect x="20" y="118" width="780" height="162" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+        <text x="410" y="138" text-anchor="middle" font-size="10" font-weight="700" fill="#15803d">Docker Compose</text>
+        <rect x="36" y="148" width="210" height="116" rx="7" fill="#dcfce7" stroke="#4ade80" stroke-width="1"/>
+        <text x="141" y="167" text-anchor="middle" font-size="10" font-weight="700" fill="#166534">facerecserver-models</text>
+        <text x="141" y="180" text-anchor="middle" font-size="8.5" fill="#16a34a">Debian slim · exits 0</text>
+        <text x="141" y="198" text-anchor="middle" font-size="8.5" fill="#374151">unpack model-bundle.tar.gz</text>
+        <text x="141" y="212" text-anchor="middle" font-size="8.5" fill="#374151">copy face_embeddings.json</text>
+        <text x="141" y="226" text-anchor="middle" font-size="8.5" fill="#374151">→ shared volume</text>
+        <text x="141" y="248" text-anchor="middle" font-size="8" fill="#94a3b8">condition: service_completed_successfully</text>
+        <rect x="302" y="168" width="200" height="76" rx="7" fill="#fefce8" stroke="#fcd34d" stroke-width="1.5"/>
+        <text x="402" y="190" text-anchor="middle" font-size="10" font-weight="700" fill="#b45309">Shared Volume</text>
+        <text x="402" y="205" text-anchor="middle" font-size="9" fill="#d97706">models-data</text>
+        <text x="402" y="219" text-anchor="middle" font-size="9" fill="#92400e">/app/model  (read-write)</text>
+        <text x="402" y="233" text-anchor="middle" font-size="8.5" fill="#94a3b8">live enrollments persist here</text>
+        <rect x="556" y="148" width="224" height="116" rx="7" fill="#dcfce7" stroke="#4ade80" stroke-width="1"/>
+        <text x="668" y="167" text-anchor="middle" font-size="10" font-weight="700" fill="#166534">facerecserver-app</text>
+        <text x="668" y="180" text-anchor="middle" font-size="8.5" fill="#16a34a">Python 3.12 + dlib</text>
+        <text x="668" y="198" text-anchor="middle" font-size="8.5" fill="#374151">Flask + SocketIO · HTTPS :8080</text>
+        <text x="668" y="212" text-anchor="middle" font-size="8.5" fill="#374151">mounts /app/model (rw)</text>
+        <text x="668" y="226" text-anchor="middle" font-size="8.5" fill="#374151">uv run python -m facerecserver.app</text>
+        <line x1="246" y1="210" x2="302" y2="210" stroke="#d97706" stroke-width="1.5" marker-end="url(#dkb)"/>
+        <line x1="502" y1="210" x2="556" y2="210" stroke="#d97706" stroke-width="1.5" marker-end="url(#dkb)"/>
+      </svg>
+    </div>
+    <div class="callouts">
+      <div class="callout purple"><strong>Two-image pattern</strong><span>Keeps app image lean. Model updates don't require rebuilding the heavy Python/dlib layer.</span></div>
+      <div class="callout green"><strong>Startup order</strong><span>depends_on with service_completed_successfully guarantees the JSON file exists before the app reads it.</span></div>
+      <div class="callout amber"><strong>Writable volume</strong><span>Live enrollments during a session persist inside the running container's shared volume.</span></div>
+    </div>
+  </div>
+
+  <!-- 2.5 Component Map -->
+  <div class="arch-section">
+    <span class="arch-num">2.5</span>
+    <h3>Component Dependency Map</h3>
+    <p class="desc">
+      Four Python modules and two data files. <code>app.py</code> is the entry point and delegates
+      all recognition work to <code>inference.py</code>. Both use <code>paths.py</code> for file-system
+      constants. <code>inference.py</code> wires together face_recognition, OpenCV, and the embeddings JSON.
+    </p>
+    <table>
+      <thead><tr><th>Module / File</th><th>Role</th><th>Key dependency</th></tr></thead>
+      <tbody>
+        <tr><td><code>facerecserver/app.py</code></td><td>Flask + SocketIO entry point. Owns WebSocket events and SSL context.</td><td>inference.py, paths.py</td></tr>
+        <tr><td><code>facerecserver/inference.py</code></td><td>FaceRecognizer class — predict, enroll_at_box, draw. No Flask dependency.</td><td>face_recognition, OpenCV, paths.py</td></tr>
+        <tr><td><code>facerecserver/paths.py</code></td><td>Resolves PROJECT_ROOT by walking up from __file__ until pyproject.toml is found.</td><td>standard library only</td></tr>
+        <tr><td><code>config/recognizer.json</code></td><td>Runtime config: distance_threshold (default 0.5), detection_model (default hog).</td><td>read by inference.py via paths.py</td></tr>
+        <tr><td><code>model/face_embeddings.json</code></td><td>Name → list of 128-d vectors. Read on startup, appended on each enrollment.</td><td>read/written by inference.py</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════ 3 · PROBLEMS SOLVED ════════════════ -->
+<div class="page">
+  <div class="chapter-label">Chapter 03</div>
+  <h2 class="chapter">Problems Faced &amp; Solved</h2>
+
+  <div class="problem">
+    <div class="problem-header">
+      <div class="problem-num">1</div>
+      <div class="problem-title">Package not importable after install</div>
+    </div>
+    <div class="problem-body">
+      <div class="problem-section">Problem</div>
+      <p>After creating <code>pyproject.toml</code> and running <code>uv sync</code>, scripts raised <code>ModuleNotFoundError: No module named 'facerecserver'</code>. The venv existed but the package was not installed.</p>
+      <div class="problem-section">Cause</div>
+      <p><code>pyproject.toml</code> had no <code>[build-system]</code> table. Without it, <code>uv</code> treats the project as an application and does not install it as a local editable package.</p>
+      <div class="problem-section">Fix</div>
+      <pre>[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"</pre>
+      <p>After <code>uv sync</code> the package was installed and all imports resolved correctly.</p>
+    </div>
+  </div>
+
+  <div class="problem">
+    <div class="problem-header">
+      <div class="problem-num">2</div>
+      <div class="problem-title">Wrong recognition library — LBPH vs embeddings</div>
+    </div>
+    <div class="problem-body">
+      <div class="problem-section">Problem</div>
+      <p>The original plan used OpenCV's LBPH face recognizer, which required an offline data-collection phase before the server could recognise anyone. LBPH cannot do live enrollment without retraining.</p>
+      <div class="problem-section">Cause</div>
+      <p>LBPH was chosen for simplicity, but the hackathon brief required embedding-based recognition with a structured database, and graded on accuracy.</p>
+      <div class="problem-section">Fix</div>
+      <p>Switched to the <code>face_recognition</code> library (dlib ResNet, 99.38% LFW accuracy). Embeddings are stored as 128-d vectors in a JSON file and compared at runtime using Euclidean distance. The entire offline pipeline was replaced by live enrollment — a person is registered in under five seconds.</p>
+    </div>
+  </div>
+
+  <div class="problem">
+    <div class="problem-header">
+      <div class="problem-num">3</div>
+      <div class="problem-title"><code>face_recognition_models</code> missing <code>pkg_resources</code></div>
+    </div>
+    <div class="problem-body">
+      <div class="problem-section">Problem</div>
+      <p>After installing <code>face-recognition</code>, importing it raised <code>ModuleNotFoundError: No module named 'pkg_resources'</code>.</p>
+      <div class="problem-section">Cause</div>
+      <p><code>face_recognition_models</code> uses the legacy <code>from pkg_resources import resource_filename</code> API. In Python 3.12 environments managed by <code>uv</code>, <code>setuptools</code> is installed in a stripped form that does not expose the <code>pkg_resources</code> top-level module.</p>
+      <div class="problem-section">Fix</div>
+      <p>Patched <code>face_recognition_models/__init__.py</code> in the venv to use the modern standard-library replacement:</p>
+      <pre>from importlib.resources import files as _files
+
+def _model(name):
+    return str(_files(__name__).joinpath("models").joinpath(name))</pre>
+    </div>
+  </div>
+
+  <div class="problem">
+    <div class="problem-header">
+      <div class="problem-num">4</div>
+      <div class="problem-title">Camera blocked without HTTPS</div>
+    </div>
+    <div class="problem-body">
+      <div class="problem-section">Problem</div>
+      <p>The browser refused to call <code>getUserMedia()</code> when the app was served over plain HTTP on a non-localhost address.</p>
+      <div class="problem-section">Cause</div>
+      <p>Browsers enforce the Secure Context requirement: camera and microphone APIs are only available on <code>localhost</code> or HTTPS origins. Since the server runs on a LAN IP, HTTP is not treated as secure.</p>
+      <div class="problem-section">Fix</div>
+      <p>Generated a self-signed TLS certificate and loaded it into Flask via Python's <code>ssl.SSLContext</code>. The server now listens on HTTPS port 8080. The browser shows a one-time "Not Secure" warning for the self-signed cert; after clicking "Proceed" the camera works normally.</p>
+<pre>openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout certificates/private.key \
+  -out    certificates/certificate.crt \
+  -subj   "/CN=localhost"</pre>
+    </div>
+  </div>
+
+  <div class="problem">
+    <div class="problem-header">
+      <div class="problem-num">5</div>
+      <div class="problem-title">Multiple unknown faces — enrollment ambiguity</div>
+    </div>
+    <div class="problem-body">
+      <div class="problem-section">Problem</div>
+      <p>When several unknown people were in frame simultaneously, clicking "Add Person" always enrolled the first face dlib detected internally (arbitrary order). There was no way to tell the server which person to name.</p>
+      <div class="problem-section">Fix — two parts</div>
+      <p><strong>Stable labels.</strong> The server sorts unknown faces by their left-edge x-coordinate and assigns sequential labels — "Unknown 1" (leftmost), "Unknown 2", "Unknown 3" — before emitting the detections event.</p>
+      <p><strong>Per-label enrollment form.</strong> The "Add Person" panel dynamically lists every current unknown as a labelled row with its own text input. The user fills in the names they know, leaves the rest blank, and clicks Save All.</p>
+      <p><strong>Yellow highlight.</strong> Clicking a face on the video canvas draws a yellow bounding box overlay and highlights the corresponding row in the enrollment form, making it clear which face is being named.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ 4 · CONCLUSION ════════════════ -->
+<div class="page">
+  <div class="chapter-label">Chapter 04</div>
+  <h2 class="chapter">Conclusion</h2>
+
+  <p>
+    FaceRecServer demonstrates a complete, production-shaped face recognition pipeline built
+    entirely with open-source tools in a short hackathon timeframe. The system meets every
+    requirement in the brief — camera access, embedding-based recognition, structured storage,
+    visual feedback, deployment, and CI/CD — and adds meaningful innovations: live enrollment
+    with no offline training, multi-person enrollment in a single interaction, and a polished
+    streaming UI.
+  </p>
+  <p>
+    The most significant technical decision was abandoning LBPH in favour of dlib embeddings.
+    LBPH would have satisfied the minimum requirements, but the switch to a pretrained ResNet
+    model delivered substantially higher accuracy, eliminated the offline data-collection workflow,
+    and made live enrollment possible. The cost was a more complex Docker image (dlib requires
+    cmake and C++ build tools) and one runtime compatibility issue with <code>pkg_resources</code>,
+    both of which were resolved.
+  </p>
+  <p>
+    The architecture — browser captures frames, server processes and annotates, WebSocket streams
+    the result back — scales naturally. The server is stateless per-frame and thread-safe; the
+    embedding database is a plain JSON file that any future version of the system can read.
+    Replacing the recognition backend (for example with ArcFace or FaceNet for even higher accuracy)
+    requires changing only <code>inference.py</code> — the rest of the stack is unaffected.
+  </p>
+
+  <div class="callouts" style="margin-top:32px;">
+    <div class="callout">
+      <strong>Open-source stack</strong>
+      <span>face_recognition, Flask, SocketIO, OpenCV, dlib — all freely available, battle-tested libraries. No vendor lock-in.</span>
+    </div>
+    <div class="callout green">
+      <strong>Swappable backend</strong>
+      <span>Replacing dlib with ArcFace or FaceNet requires changing only inference.py. The WebSocket layer, UI, Docker stack, and CI/CD are unaffected.</span>
+    </div>
+    <div class="callout purple">
+      <strong>Thread-safe by design</strong>
+      <span>threading.Lock guards the frame buffer and JSON writes. Multiple SocketIO threads can process events concurrently without race conditions.</span>
+    </div>
+    <div class="callout amber">
+      <strong>Portable data</strong>
+      <span>face_embeddings.json is plain JSON. It can be versioned, backed up, migrated, or extended without touching any code.</span>
+    </div>
+  </div>
+
+  <table style="margin-top:32px;">
+    <thead><tr><th>Requirement</th><th>Status</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Camera access in browser</td><td>✓ Done</td><td>HTTPS + self-signed cert</td></tr>
+      <tr><td>Embedding-based recognition</td><td>✓ Done</td><td>dlib ResNet 128-d vectors</td></tr>
+      <tr><td>Structured face database</td><td>✓ Done</td><td>face_embeddings.json</td></tr>
+      <tr><td>Visual feedback (bounding boxes)</td><td>✓ Done</td><td>Green known / red unknown / yellow selected</td></tr>
+      <tr><td>Live enrollment (no training)</td><td>✓ Done</td><td>Under 5 s per person</td></tr>
+      <tr><td>Multi-person enrollment</td><td>✓ Done</td><td>Batch form with Unknown N labels</td></tr>
+      <tr><td>Docker deployment</td><td>✓ Done</td><td>Two-image Compose stack</td></tr>
+      <tr><td>CI/CD pipeline</td><td>✓ Done</td><td>GitHub Actions (test → push app → push models)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

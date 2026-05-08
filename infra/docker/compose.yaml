@@ -1,0 +1,19 @@
+services:
+  models:
+    image: ${MODELS_IMAGE:-facerecserver-models:local}
+    restart: "no"
+    volumes:
+      - models-data:/shared-models
+
+  app:
+    image: ${APP_IMAGE:-facerecserver-app:local}
+    depends_on:
+      models:
+        condition: service_completed_successfully
+    ports:
+      - "8080:8080"
+    volumes:
+      - models-data:/app/model
+
+volumes:
+  models-data:
