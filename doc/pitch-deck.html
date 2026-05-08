@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FaceRec API — Pitch Deck</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 33.87cm;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #0f172a;
+  color: #0f172a;
+  font-size: 14px;
+}
+
+.slide {
+  width: 33.87cm;
+  height: 19.05cm;
+  padding: 52px 72px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  page-break-after: always;
+  position: relative;
+  overflow: hidden;
+}
+.slide:last-child { page-break-after: auto; }
+
+.slide-num {
+  position: absolute;
+  bottom: 24px;
+  right: 40px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 1px;
+}
+
+/* Cover */
+.cover {
+  background: #0f172a;
+  color: #f8fafc;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+}
+.cover-left {
+  width: 55%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 52px 60px;
+  background: #0f172a;
+}
+.cover-right {
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(160deg, #312e81 0%, #1e1b4b 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 52px 48px;
+  gap: 18px;
+}
+.cover-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #818cf8;
+  margin-bottom: 16px;
+}
+.cover h1 {
+  font-size: 3.8rem;
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 1;
+  margin-bottom: 20px;
+}
+.cover h1 span { color: #818cf8; }
+.cover-sub {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 36px;
+}
+.cover-stat {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 16px 20px;
+  width: 100%;
+}
+.cover-stat .num { font-size: 1.8rem; font-weight: 800; color: #818cf8; display: block; }
+.cover-stat .lbl { font-size: 0.75rem; color: #64748b; font-weight: 600; margin-top: 2px; }
+.tag {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 999px;
+}
+.tag.accent { background: #312e81; border-color: #4338ca; color: #c7d2fe; }
+
+/* Eyebrow */
+.eyebrow {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #6366f1;
+  margin-bottom: 8px;
+}
+
+/* Headings */
+h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #0f172a;
+  line-height: 1.1;
+  margin-bottom: 28px;
+}
+h2 em { font-style: normal; color: #6366f1; }
+
+p.lead {
+  font-size: 0.98rem;
+  color: #475569;
+  line-height: 1.7;
+  max-width: 680px;
+  margin-bottom: 16px;
+}
+
+/* Two-column layout */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: start;
+}
+.two-col.wide { grid-template-columns: 1.2fr 0.8fr; }
+
+/* Cards */
+.cards { display: grid; gap: 14px; }
+.cards-2 { grid-template-columns: 1fr 1fr; }
+.cards-3 { grid-template-columns: 1fr 1fr 1fr; }
+.cards-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+.card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+.card.accent  { background: #eef2ff; border-color: #c7d2fe; }
+.card.dark    { background: #0f172a; border-color: #1e293b; color: #f8fafc; }
+.card.green   { background: #f0fdf4; border-color: #bbf7d0; }
+.card.red     { background: #fef2f2; border-color: #fecaca; }
+
+.card-icon { font-size: 1.4rem; margin-bottom: 8px; }
+.card h3   { font-size: 0.88rem; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+.card.dark h3 { color: #f8fafc; }
+.card p    { font-size: 0.78rem; color: #64748b; line-height: 1.5; }
+.card.dark p { color: #94a3b8; }
+.card .big { font-size: 1.7rem; font-weight: 800; color: #6366f1; display: block; margin-bottom: 4px; }
+.card.dark .big { color: #818cf8; }
+
+/* Code block */
+pre {
+  background: #0f172a;
+  color: #e2e8f0;
+  border-radius: 10px;
+  padding: 18px 22px;
+  font-family: 'Consolas', monospace;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  overflow-x: auto;
+}
+.hl { color: #818cf8; }
+.cm { color: #475569; }
+.st { color: #34d399; }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+th {
+  background: #0f172a;
+  color: #f8fafc;
+  padding: 8px 14px;
+  text-align: left;
+  font-weight: 700;
+}
+th:first-child { border-radius: 8px 0 0 0; }
+th:last-child  { border-radius: 0 8px 0 0; }
+td { padding: 8px 14px; border-bottom: 1px solid #e2e8f0; color: #475569; }
+tr:nth-child(even) td { background: #f8fafc; }
+.yes { color: #16a34a; font-weight: 700; }
+.no  { color: #dc2626; font-weight: 700; }
+.meh { color: #d97706; font-weight: 700; }
+
+/* Dark / accent slides */
+.dark-slide { background: #0f172a; color: #f8fafc; }
+.dark-slide h2 { color: #f8fafc; }
+.dark-slide .eyebrow { color: #818cf8; }
+.dark-slide p.lead   { color: #94a3b8; }
+
+.accent-slide { background: linear-gradient(135deg, #312e81 0%, #1e1b4b 100%); color: #f8fafc; }
+.accent-slide h2     { color: #f8fafc; }
+.accent-slide .eyebrow { color: #a5b4fc; }
+.accent-slide p.lead   { color: #c7d2fe; }
+
+/* Divider */
+.divider { width: 2px; background: #e2e8f0; align-self: stretch; margin: 0 4px; }
+
+/* Light slides get a subtle gradient background so no white gaps show */
+.light-slide {
+  background: linear-gradient(160deg, #f8fafc 0%, #eef2ff 100%);
+}
+
+/* Print */
+@page { size: 33.87cm 19.05cm landscape; margin: 0; }
+@media print {
+  html, body { background: #0f172a; }
+  .slide { page-break-after: always; page-break-inside: avoid; }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════ 01 · COVER -->
+<div class="slide cover">
+  <div class="cover-left">
+    <div class="cover-eyebrow">Developer Platform · Debi Hackathon 2026</div>
+    <h1>Face<span>Rec</span><br>API</h1>
+    <p class="cover-sub">
+      Drop-in face recognition infrastructure.<br>
+      Build any application on top — in hours, not months.
+    </p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <span class="tag accent">On-Premise</span>
+      <span class="tag accent">Privacy-First</span>
+      <span class="tag accent">REST + WebSocket</span>
+      <span class="tag">Open Core</span>
+      <span class="tag">Docker</span>
+    </div>
+  </div>
+  <div class="cover-right">
+    <div class="cover-stat">
+      <span class="num">99.38%</span>
+      <div class="lbl">Accuracy — dlib ResNet on LFW benchmark</div>
+    </div>
+    <div class="cover-stat">
+      <span class="num">&lt; 5 sec</span>
+      <div class="lbl">Enroll a person and recognise on the next frame</div>
+    </div>
+    <div class="cover-stat">
+      <span class="num">1 command</span>
+      <div class="lbl">docker compose up — full API running</div>
+    </div>
+  </div>
+  <div class="slide-num">01 / 05</div>
+</div>
+
+<!-- ══════════════════════════════════════ 02 · PROBLEM + SOLUTION -->
+<div class="slide light-slide">
+  <div class="eyebrow">Problem & Solution</div>
+  <h2>Face recognition is powerful.<br><em>Using it is unreasonably hard.</em></h2>
+
+  <div class="two-col">
+    <div>
+      <div class="cards cards-3" style="margin-bottom:16px;">
+        <div class="card red">
+          <div class="card-icon">📦</div>
+          <h3>Complex ML stack</h3>
+          <p>dlib, OpenCV, numpy, embeddings — weeks of setup before writing a single line of product code.</p>
+        </div>
+        <div class="card red">
+          <div class="card-icon">☁️</div>
+          <h3>Cloud APIs = risk</h3>
+          <p>AWS Rekognition & Azure Face: per-call pricing, your face data leaves your servers, GDPR exposure.</p>
+        </div>
+        <div class="card red">
+          <div class="card-icon">🔁</div>
+          <h3>Every team reinvents</h3>
+          <p>Access control, schools, events — all solving the same problem from scratch, every time.</p>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div style="background:#eef2ff;border:1px solid #c7d2fe;border-radius:10px;padding:18px 20px;">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#6366f1;margin-bottom:8px;">Our Solution</div>
+        <p style="font-size:0.92rem;color:#312e81;font-weight:600;line-height:1.5;">FaceRec API is to face recognition what Stripe is to payments — a clean API you drop into your app, so you ship features instead of models.</p>
+      </div>
+      <div class="cards cards-2">
+        <div class="card green">
+          <div class="card-icon">🏠</div>
+          <h3>Runs on your servers</h3>
+          <p>On-premise. Face data never leaves your infrastructure. GDPR-safe by design.</p>
+        </div>
+        <div class="card green">
+          <div class="card-icon">⚡</div>
+          <h3>No ML expertise needed</h3>
+          <p>REST + WebSocket API. Any developer can integrate in an afternoon.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">02 / 05</div>
+</div>
+
+<!-- ══════════════════════════════════════ 03 · HOW IT WORKS (TECH) -->
+<div class="slide dark-slide">
+  <div class="eyebrow">How It Works</div>
+  <h2>From camera frame to<br><em>named identity in milliseconds.</em></h2>
+
+  <div class="two-col wide" style="align-items:start;gap:32px;">
+    <div>
+      <div class="cards cards-3" style="margin-bottom:16px;">
+        <div class="card dark" style="border-color:#4338ca;">
+          <h3>① Detect</h3>
+          <p>HOG face detector finds bounding boxes in each frame. Runs on CPU — no GPU needed.</p>
+        </div>
+        <div class="card dark" style="border-color:#4338ca;">
+          <h3>② Embed</h3>
+          <p>dlib ResNet maps each face to a 128-dimension vector. Same model behind 99.38% LFW accuracy.</p>
+        </div>
+        <div class="card dark" style="border-color:#4338ca;">
+          <h3>③ Match</h3>
+          <p>Cosine distance against stored embeddings. Green box = known. Red box = unknown. Threshold tunable.</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
+        <span style="background:#1e293b;border:1px solid #334155;color:#94a3b8;font-size:0.7rem;font-weight:600;padding:4px 10px;border-radius:999px;">Python 3.12</span>
+        <span style="background:#1e293b;border:1px solid #334155;color:#94a3b8;font-size:0.7rem;font-weight:600;padding:4px 10px;border-radius:999px;">dlib ResNet</span>
+        <span style="background:#1e293b;border:1px solid #334155;color:#94a3b8;font-size:0.7rem;font-weight:600;padding:4px 10px;border-radius:999px;">Flask-SocketIO</span>
+        <span style="background:#1e293b;border:1px solid #334155;color:#94a3b8;font-size:0.7rem;font-weight:600;padding:4px 10px;border-radius:999px;">Docker Compose</span>
+        <span style="background:#1e293b;border:1px solid #334155;color:#94a3b8;font-size:0.7rem;font-weight:600;padding:4px 10px;border-radius:999px;">WebSocket</span>
+      </div>
+    </div>
+    <div>
+      <pre><span class="cm">// Stream frames — get live detections</span>
+<span class="hl">socket</span>.<span class="hl">on</span>(<span class="st">"detections"</span>, (faces) =&gt; {
+  <span class="cm">// [{ name, distance, box }]</span>
+  renderBoxes(faces);
+});
+
+<span class="cm">// Enroll a new person — no retraining</span>
+<span class="hl">socket</span>.<span class="hl">emit</span>(<span class="st">"enroll_request"</span>, {
+  label: <span class="st">"Unknown 3"</span>,
+  name:  <span class="st">"Alice"</span>
+});
+<span class="cm">// Recognised on the very next frame ✓</span>
+
+<span class="cm">// REST — list enrolled people</span>
+<span class="hl">GET</span> /api/people
+<span class="cm">// → { people: ["Alice", "Bob", ...] }</span></pre>
+    </div>
+  </div>
+  <div class="slide-num">03 / 05</div>
+</div>
+
+<!-- ══════════════════════════════════════ 04 · MARKET + BUSINESS MODEL -->
+<div class="slide light-slide">
+  <div class="eyebrow">Market & Business Model</div>
+  <h2>Any industry with a camera<br><em>is a potential customer.</em></h2>
+
+  <div class="two-col">
+    <div>
+      <div class="cards cards-2" style="margin-bottom:14px;">
+        <div class="card accent">
+          <div class="card-icon">🏢</div>
+          <h3>Access Control</h3>
+          <p>Office doors, data centers, restricted zones.</p>
+        </div>
+        <div class="card accent">
+          <div class="card-icon">🏫</div>
+          <h3>Attendance</h3>
+          <p>Schools, universities — one camera per classroom.</p>
+        </div>
+        <div class="card accent">
+          <div class="card-icon">🎟️</div>
+          <h3>Events</h3>
+          <p>Conferences, stadiums — instant frictionless check-in.</p>
+        </div>
+        <div class="card accent">
+          <div class="card-icon">🏥</div>
+          <h3>Healthcare</h3>
+          <p>Patient ID at reception. No cards, no contact.</p>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div style="background:#0f172a;border:1px solid #1e293b;border-radius:10px;padding:18px 20px;">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#818cf8;margin-bottom:12px;">Revenue Model</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e293b;padding-bottom:8px;">
+            <div>
+              <div style="font-size:0.82rem;font-weight:700;color:#f8fafc;">Open Core</div>
+              <div style="font-size:0.72rem;color:#64748b;">1 camera · community support</div>
+            </div>
+            <span style="font-size:1rem;font-weight:800;color:#6366f1;">Free</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e293b;padding-bottom:8px;">
+            <div>
+              <div style="font-size:0.82rem;font-weight:700;color:#f8fafc;">Pro License</div>
+              <div style="font-size:0.72rem;color:#64748b;">Multi-camera · analytics · SSO</div>
+            </div>
+            <span style="font-size:1rem;font-weight:800;color:#818cf8;">$299/mo</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:0.82rem;font-weight:700;color:#f8fafc;">Enterprise</div>
+              <div style="font-size:0.72rem;color:#64748b;">Air-gapped · SLA · white-label SDK</div>
+            </div>
+            <span style="font-size:1rem;font-weight:800;color:#a5b4fc;">Custom</span>
+          </div>
+        </div>
+      </div>
+      <div class="cards cards-2">
+        <div class="card">
+          <span class="big">$3.6k</span>
+          <p>ARR per Pro seat</p>
+        </div>
+        <div class="card">
+          <span class="big">~$50k</span>
+          <p>ACV per enterprise deal</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">04 / 05</div>
+</div>
+
+<!-- ══════════════════════════════════════ 05 · TRACTION + ASK -->
+<div class="slide accent-slide">
+  <div class="eyebrow">Traction & The Ask</div>
+  <h2>Fully built. Deployed.<br><em>Ready to scale.</em></h2>
+
+  <div class="two-col" style="margin-top:8px;">
+    <div>
+      <div class="cards cards-2" style="margin-bottom:14px;">
+        <div class="card dark">
+          <span class="big">5 sec</span>
+          <h3>Enroll-to-recognise</h3>
+          <p>Zero retraining. Real-time.</p>
+        </div>
+        <div class="card dark">
+          <span class="big">99.38%</span>
+          <h3>Accuracy</h3>
+          <p>dlib ResNet · LFW benchmark</p>
+        </div>
+        <div class="card dark">
+          <span class="big">15 fps</span>
+          <h3>Live stream</h3>
+          <p>WebSocket · CPU only</p>
+        </div>
+        <div class="card dark">
+          <span class="big">CI/CD</span>
+          <h3>Production-grade</h3>
+          <p>GitHub Actions · Docker Hub</p>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:20px 22px;">
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#a5b4fc;margin-bottom:12px;">Seed Round</div>
+        <div style="font-size:2rem;font-weight:800;color:#fff;margin-bottom:6px;">$500k – $1.5M</div>
+        <div style="font-size:0.8rem;color:#c7d2fe;line-height:1.6;">SDK ecosystem (iOS / Android) · hosted cloud tier · 3 enterprise design partners · first sales hire</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:16px 20px;">
+        <div style="font-size:0.8rem;color:#c7d2fe;line-height:1.7;">We are building the identity layer of the physical world. Every door, every camera, every check-in point is a future API call.</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">05 / 05</div>
+</div>
+
+</body>
+</html>
