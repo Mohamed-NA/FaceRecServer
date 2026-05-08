@@ -27,6 +27,23 @@ jobs:
       - name: Install Python dependencies
         run: uv sync
 
+      - name: Patch face_recognition_models (replace legacy pkg_resources)
+        run: |
+          uv run python - <<'EOF'
+          import glob, pathlib
+          for p in glob.glob(".venv/lib/python*/site-packages/face_recognition_models/__init__.py"):
+              txt = pathlib.Path(p).read_text()
+              if "pkg_resources" in txt:
+                  txt = txt.replace(
+                      "from pkg_resources import resource_filename",
+                      "from importlib.resources import files as _rf\n"
+                      "def resource_filename(pkg, path):\n"
+                      "    return str(_rf(pkg).joinpath(path))"
+                  )
+                  pathlib.Path(p).write_text(txt)
+                  print(f"Patched {p}")
+          EOF
+
       - name: Smoke import
         run: uv run python -c "from facerecserver.inference import FaceRecognizer; print('OK')"
 
