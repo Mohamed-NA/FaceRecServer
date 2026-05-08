@@ -52,10 +52,13 @@ Open `https://localhost:8080` — accept the self-signed cert warning, allow cam
 ## Docker
 
 ```bash
+docker build -f infra/docker/Dockerfile.app -t facerecserver-app:local .
+uv run python scripts/package_model_bundle.py
+docker build -f infra/docker/Dockerfile.models -t facerecserver-models:local .
 docker compose -f infra/docker/compose.yaml up
 ```
 
-Requires `facerecserver-models` image to be available (built and pushed on version tags via CI).
+Open `http://localhost:8080`. For HTTPS inside the container set `FACEREC_ENABLE_TLS=1`.
 
 ---
 
@@ -63,9 +66,9 @@ Requires `facerecserver-models` image to be available (built and pushed on versi
 
 | Job                   | Trigger           | Action                              |
 |-----------------------|-------------------|-------------------------------------|
-| `test`                | every push / PR   | uv sync, smoke import, docker build |
+| `ci`                  | every push / PR   | uv sync, compile, health smoke test, docker build |
 | `build-and-push-app`  | `main` + tags     | push `facerecserver-app` to Docker Hub |
-| `build-and-push-models` | version tags    | push `facerecserver-models` to Docker Hub |
+| `build-and-push-models` | manual dispatch | push `facerecserver-models` from a private model bundle URL |
 
 Requires repository secrets: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`.
 
@@ -74,5 +77,6 @@ Requires repository secrets: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`.
 ## Documentation
 
 - [DOCUMENTATION.md](DOCUMENTATION.md) — full write-up: architecture, problems solved, conclusion
+- [DEPLOYMENT.md](DEPLOYMENT.md) — Docker, CI/CD, and production notes
 - [architecture.md](architecture.md) — Mermaid diagrams
 - [doc/architecture.svg](doc/architecture.svg) — SVG architecture diagram
