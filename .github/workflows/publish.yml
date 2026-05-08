@@ -17,18 +17,31 @@ jobs:
       - uses: astral-sh/setup-uv@v4
         with:
           version: "latest"
+          enable-cache: true
 
-      - name: Install dependencies
+      - name: Install system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake build-essential libopenblas-dev liblapack-dev libgl1 libglib2.0-0
-          uv sync
+
+      - name: Install Python dependencies
+        run: uv sync
 
       - name: Smoke import
         run: uv run python -c "from facerecserver.inference import FaceRecognizer; print('OK')"
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Build app image (compile check)
-        run: docker build -f infra/docker/Dockerfile.app -t facerecserver-app:ci .
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: infra/docker/Dockerfile.app
+          push: false
+          tags: facerecserver-app:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   # ── 2. Push app image ──────────────────────────────────────────────────────
   build-and-push-app:
@@ -37,6 +50,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
 
       - uses: docker/login-action@v3
         with:
@@ -49,6 +64,8 @@ jobs:
           file: infra/docker/Dockerfile.app
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/facerecserver-app:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
   # ── 3. Push models image (tags only) ──────────────────────────────────────
   build-and-push-models:
@@ -65,6 +82,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - uses: docker/setup-buildx-action@v3
+
       - uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -76,3 +95,5 @@ jobs:
           file: infra/docker/Dockerfile.models
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/facerecserver-models:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
