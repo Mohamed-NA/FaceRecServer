@@ -21,7 +21,6 @@ env:
 jobs:
   app:
     runs-on: ubuntu-latest
-    if: ${{ secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -52,7 +51,7 @@ jobs:
 
   models:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.model_bundle_url != '' && secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != '' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.model_bundle_url != '' }}
     steps:
       - uses: actions/checkout@v4
 

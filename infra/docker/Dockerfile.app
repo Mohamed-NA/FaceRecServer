@@ -21,16 +21,23 @@ RUN apt-get update \
 
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
-ENV PATH="/root/.local/bin:/app/.venv/bin:${PATH}"
+RUN cp /root/.local/bin/uv /usr/local/bin/uv \
+    && cp /root/.local/bin/uvx /usr/local/bin/uvx
+
+ENV PATH="/app/.venv/bin:${PATH}"
 
 COPY pyproject.toml uv.lock README.md ./
 
-RUN uv sync --frozen --no-dev
+# Install dependencies only (no local package) — heavy cached layer
+RUN uv sync --frozen --no-dev --no-install-project
 
-COPY config      ./config
+# Copy source after deps so source changes don't bust the dlib cache layer
 COPY facerecserver ./facerecserver
-COPY templates   ./templates
-COPY static      ./static
+COPY config        ./config
+COPY templates     ./templates
+COPY static        ./static
+
+RUN uv sync --frozen --no-dev
 
 RUN mkdir -p /app/model /app/certificates \
     && useradd --create-home --shell /usr/sbin/nologin appuser \

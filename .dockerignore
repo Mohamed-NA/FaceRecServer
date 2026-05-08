@@ -8,6 +8,7 @@ __pycache__
 
 data/
 dist/
+!dist/model-bundle.tar.gz
 model/face_embeddings.json
 certificates/
 
