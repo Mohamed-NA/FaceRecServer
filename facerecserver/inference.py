@@ -19,6 +19,11 @@ class FaceRecognizer:
         self._lock      = threading.Lock()
         self._db: dict[str, list[np.ndarray]] = self._load()
 
+    @property
+    def known_people(self) -> tuple[str, ...]:
+        with self._lock:
+            return tuple(sorted(self._db))
+
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
@@ -104,5 +109,6 @@ class FaceRecognizer:
         return {name: [np.array(e) for e in vecs] for name, vecs in raw.items()}
 
     def _save(self) -> None:
+        self._path.parent.mkdir(parents=True, exist_ok=True)
         data = {name: [e.tolist() for e in vecs] for name, vecs in self._db.items()}
         self._path.write_text(json.dumps(data, indent=2))

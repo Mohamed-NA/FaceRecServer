@@ -1,0 +1,59 @@
+name: ci
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends cmake build-essential libopenblas-dev liblapack-dev libgl1 libglib2.0-0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: uv sync --frozen
+
+      - name: Compile Python modules
+        run: uv run python -m compileall facerecserver scripts
+
+      - name: Smoke test health endpoint
+        run: |
+          uv run python - <<'PY'
+          from facerecserver.app import app
+
+          response = app.test_client().get("/healthz")
+          assert response.status_code == 200
+          assert response.get_json()["status"] == "ok"
+          PY
+
+  docker-app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build app image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: infra/docker/Dockerfile.app
+          push: false
+          tags: facerecserver-app:ci

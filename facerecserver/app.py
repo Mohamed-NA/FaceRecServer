@@ -3,8 +3,10 @@ from __future__ import annotations
 import base64
 import binascii
 import json
+import os
 import ssl
 import threading
+from pathlib import Path
 
 import cv2
 import numpy as np
@@ -37,6 +39,14 @@ _frame_lock = threading.Lock()
 @app.route("/")
 def index():
     return render_template("index.html")
+
+
+@app.get("/healthz")
+def healthz():
+    return {
+        "status": "ok",
+        "known_people": len(recognizer.known_people),
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -122,16 +132,24 @@ def handle_enroll(data: dict) -> None:
 # ---------------------------------------------------------------------------
 
 def main() -> None:
-    cert = CERTIFICATES_DIR / "certificate.crt"
-    key  = CERTIFICATES_DIR / "private.key"
+    host = os.getenv("FACEREC_HOST", "0.0.0.0")
+    port = int(os.getenv("FACEREC_PORT", "8080"))
+    cert = Path(os.getenv("FACEREC_TLS_CERT", CERTIFICATES_DIR / "certificate.crt"))
+    key  = Path(os.getenv("FACEREC_TLS_KEY", CERTIFICATES_DIR / "private.key"))
+    enable_tls = os.getenv("FACEREC_ENABLE_TLS", "auto").lower()
+    require_tls = os.getenv("FACEREC_REQUIRE_TLS", "0") == "1"
 
-    ssl_ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-    ssl_ctx.load_cert_chain(certfile=str(cert), keyfile=str(key))
+    ssl_ctx = None
+    if enable_tls not in {"0", "false", "no"} and cert.exists() and key.exists():
+        ssl_ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+        ssl_ctx.load_cert_chain(certfile=str(cert), keyfile=str(key))
+    elif require_tls:
+        raise FileNotFoundError(f"TLS certificate/key not found: {cert}, {key}")
 
     socketio.run(
         app,
-        host="0.0.0.0",
-        port=8080,
+        host=host,
+        port=port,
         ssl_context=ssl_ctx,
         allow_unsafe_werkzeug=True,
     )

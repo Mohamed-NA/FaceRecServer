@@ -31,8 +31,16 @@ COPY config      ./config
 COPY facerecserver ./facerecserver
 COPY templates   ./templates
 COPY static      ./static
-COPY certificates ./certificates
+
+RUN mkdir -p /app/model /app/certificates \
+    && useradd --create-home --shell /usr/sbin/nologin appuser \
+    && chown -R appuser:appuser /app
+
+USER appuser
 
 EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+    CMD python -c "import os, urllib.request; urllib.request.urlopen(f'http://127.0.0.1:{os.getenv(\"FACEREC_PORT\", \"8080\")}/healthz', timeout=3).read()"
 
 CMD ["uv", "run", "python", "-m", "facerecserver.app"]
