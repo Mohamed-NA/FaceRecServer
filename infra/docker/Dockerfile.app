@@ -31,6 +31,20 @@ COPY pyproject.toml uv.lock README.md ./
 # Install dependencies only (no local package) — heavy cached layer
 RUN uv sync --frozen --no-dev --no-install-project
 
+# Patch face_recognition_models: replace legacy pkg_resources with importlib
+RUN python - <<'EOF'
+import glob, pathlib
+for p in glob.glob(".venv/lib/python*/site-packages/face_recognition_models/__init__.py"):
+    txt = pathlib.Path(p).read_text()
+    if "pkg_resources" in txt:
+        txt = txt.replace(
+            "from pkg_resources import resource_filename",
+            "from importlib.resources import files as _rf\ndef resource_filename(pkg, path):\n    return str(_rf(pkg).joinpath(path))"
+        )
+        pathlib.Path(p).write_text(txt)
+        print(f"Patched {p}")
+EOF
+
 # Copy source after deps so source changes don't bust the dlib cache layer
 COPY facerecserver ./facerecserver
 COPY config        ./config
