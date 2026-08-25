@@ -80,7 +80,3 @@ Requires repository secrets: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`.
 - [DEPLOYMENT.md](DEPLOYMENT.md) — Docker, CI/CD, and production notes
 - [architecture.md](architecture.md) — Mermaid diagrams
 - [doc/architecture.svg](doc/architecture.svg) — SVG architecture diagram
-
-
-# Team 
-# Mahmoud Saad Dwidar 
